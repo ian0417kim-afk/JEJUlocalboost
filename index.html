@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>로컬부스트 제주 — Jeju Local Platform</title>
+<meta name="description" content="제주의 숙소, 맛집, 학원, 부동산을 한곳에서. 로컬부스트 제주.">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f0f0e;
+  --ivory:#f7f4ef;
+  --cream:#ede9e1;
+  --rust:#bf4e2a;
+  --rust-light:#f0e0d8;
+  --sage:#2d5a4e;
+  --gold:#b8922e;
+  --muted:#9a9590;
+  --white:#fdfcfa;
+  --glass:rgba(253,252,250,0.75);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  background:var(--ivory);
+  color:var(--ink);
+  font-family:'DM Sans','Noto Sans KR',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── 노이즈 텍스처 오버레이 ── */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+  opacity:0.6;
+}
+
+/* ── 헤더 ── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:0 32px;height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  background:rgba(247,244,239,0.88);
+  backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(232,227,218,0.6);
+  transition:all 0.3s;
+}
+.logo{display:flex;align-items:center;gap:12px;text-decoration:none;}
+.logo-mark{
+  width:36px;height:36px;
+  background:var(--rust);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  box-shadow:0 4px 12px rgba(191,78,42,0.3);
+}
+.logo-name{
+  font-family:'Playfair Display',serif;
+  font-size:18px;
+  color:var(--ink);
+  letter-spacing:-0.02em;
+}
+.logo-name em{color:var(--rust);font-style:italic;}
+.header-badge{
+  font-size:10px;
+  letter-spacing:0.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+  background:var(--cream);
+  padding:5px 12px;
+  border-radius:100px;
+  border:1px solid var(--cream);
+}
+
+/* ── 히어로 ── */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:120px 24px 80px;
+  overflow:hidden;
+}
+
+/* 배경 원형 그라디언트 */
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(191,78,42,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 70%, rgba(45,90,78,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 50% 10%, rgba(184,146,46,0.05) 0%, transparent 50%);
+  pointer-events:none;
+}
+
+/* 제주 지도 장식 */
+.jeju-deco{
+  position:absolute;
+  right:-60px;top:50%;
+  transform:translateY(-50%);
+  width:480px;height:280px;
+  opacity:0.06;
+  pointer-events:none;
+}
+
+.hero-content{position:relative;z-index:1;text-align:center;max-width:680px;}
+
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--rust);
+  background:var(--rust-light);
+  padding:6px 16px;border-radius:100px;
+  margin-bottom:28px;
+  animation:fadeUp 0.6s ease both;
+}
+.hero-eyebrow::before{content:'';width:6px;height:6px;background:var(--rust);border-radius:50%;display:inline-block;}
+
+.hero-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(38px,8vw,72px);
+  line-height:1.1;
+  letter-spacing:-0.03em;
+  margin-bottom:20px;
+  animation:fadeUp 0.6s 0.1s ease both;
+}
+.hero-title .line1{display:block;color:var(--ink);}
+.hero-title .line2{display:block;color:var(--rust);font-style:italic;}
+
+.hero-desc{
+  font-size:clamp(14px,2vw,17px);
+  color:var(--muted);
+  line-height:1.8;
+  margin-bottom:48px;
+  font-weight:300;
+  animation:fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-stats{
+  display:flex;gap:32px;justify-content:center;
+  margin-bottom:52px;
+  animation:fadeUp 0.6s 0.3s ease both;
+}
+.stat{text-align:center;}
+.stat-num{
+  font-family:'Playfair Display',serif;
+  font-size:28px;font-weight:700;
+  color:var(--ink);
+  line-height:1;
+}
+.stat-num span{color:var(--rust);font-style:italic;}
+.stat-label{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:0.05em;}
+
+.scroll-hint{
+  position:absolute;bottom:36px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);
+  animation:fadeUp 0.6s 0.5s ease both;
+}
+.scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,var(--muted),transparent);animation:scrollAnim 1.8s ease infinite;}
+
+/* ── 카테고리 섹션 ── */
+.section{
+  position:relative;z-index:1;
+  padding:80px 24px 100px;
+  max-width:1100px;
+  margin:0 auto;
+}
+.section-header{text-align:center;margin-bottom:56px;}
+.section-eyebrow{
+  font-size:10px;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--rust);margin-bottom:12px;
+}
+.section-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(28px,5vw,44px);
+  letter-spacing:-0.02em;
+  color:var(--ink);
+}
+.section-title em{color:var(--rust);font-style:italic;}
+
+/* ── 카테고리 카드 그리드 ── */
+.cat-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:16px;
+}
+
+.cat-card{
+  position:relative;
+  border-radius:24px;
+  overflow:hidden;
+  cursor:pointer;
+  text-decoration:none;
+  display:block;
+  transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s ease;
+  animation:fadeUp 0.5s ease both;
+}
+.cat-card:hover{
+  transform:translateY(-6px) scale(1.01);
+  box-shadow:0 24px 60px rgba(0,0,0,0.12);
+}
+.cat-card:nth-child(1){animation-delay:0.1s;}
+.cat-card:nth-child(2){animation-delay:0.15s;}
+.cat-card:nth-child(3){animation-delay:0.2s;}
+.cat-card:nth-child(4){animation-delay:0.25s;}
+.cat-card:nth-child(5){animation-delay:0.3s;}
+.cat-card:nth-child(6){animation-delay:0.35s;}
+
+/* 카드 크기 변형 */
+.cat-card.large{grid-column:span 2;min-height:200px;}
+.cat-card.normal{min-height:180px;}
+
+.cat-bg{
+  position:absolute;inset:0;
+  transition:transform 0.4s ease;
+}
+.cat-card:hover .cat-bg{transform:scale(1.04);}
+
+/* 각 카드별 배경 */
+.cat-card.stay .cat-bg{background:linear-gradient(135deg,#1a3a2e 0%,#2d5a4e 40%,#3d7a6a 100%);}
+.cat-card.food .cat-bg{background:linear-gradient(135deg,#3a1a0a 0%,#bf4e2a 40%,#d4724a 100%);}
+.cat-card.academy .cat-bg{background:linear-gradient(135deg,#0d2a4e 0%,#1a5fa8 40%,#3a7fc8 100%);}
+.cat-card.realty .cat-bg{background:linear-gradient(135deg,#2a2010 0%,#b8922e 40%,#d4ae54 100%);}
+.cat-card.coming .cat-bg{background:linear-gradient(135deg,#1a1a1a 0%,#3a3a3a 100%);}
+
+/* 카드 패턴 */
+.cat-pattern{
+  position:absolute;inset:0;
+  opacity:0.08;
+  background-image:radial-gradient(circle at 80% 20%, white 1px, transparent 1px);
+  background-size:24px 24px;
+}
+
+.cat-content{
+  position:relative;z-index:1;
+  padding:32px 28px;
+  height:100%;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.cat-icon{font-size:32px;margin-bottom:12px;display:block;}
+.cat-label{
+  font-size:10px;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(255,255,255,0.55);margin-bottom:6px;
+}
+.cat-name{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(20px,3vw,26px);
+  color:white;line-height:1.2;
+  font-weight:700;
+}
+.cat-name em{font-style:italic;opacity:0.85;}
+.cat-desc{
+  font-size:12px;color:rgba(255,255,255,0.55);
+  margin-top:8px;line-height:1.6;
+}
+.cat-count{
+  display:inline-block;
+  margin-top:16px;
+  font-size:11px;
+  color:rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.12);
+  padding:4px 12px;border-radius:100px;
+  backdrop-filter:blur(8px);
+}
+.cat-arrow{
+  position:absolute;bottom:24px;right:24px;
+  width:36px;height:36px;
+  background:rgba(255,255,255,0.15);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;
+  backdrop-filter:blur(8px);
+  transition:all 0.2s;
+}
+.cat-card:hover .cat-arrow{background:rgba(255,255,255,0.28);transform:translate(2px,-2px);}
+
+.coming-tag{
+  display:inline-block;
+  font-size:9px;letter-spacing:0.15em;text-transform:uppercase;
+  background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.4);
+  padding:3px 10px;border-radius:100px;margin-top:10px;
+}
+
+/* ── 소개 섹션 ── */
+.about-section{
+  background:var(--ink);
+  padding:80px 24px;
+  position:relative;overflow:hidden;
+}
+.about-section::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 60% at 30% 50%, rgba(191,78,42,0.15) 0%, transparent 60%);
+}
+.about-inner{
+  max-width:800px;margin:0 auto;
+  position:relative;z-index:1;text-align:center;
+}
+.about-eyebrow{font-size:10px;letter-spacing:0.25em;text-transform:uppercase;color:var(--rust);margin-bottom:16px;}
+.about-title{
+  font-family:'Playfair Display',serif;
+  font-size:clamp(24px,4vw,38px);
+  color:var(--ivory);
+  line-height:1.3;
+  margin-bottom:20px;
+  letter-spacing:-0.02em;
+}
+.about-title em{color:var(--rust);font-style:italic;}
+.about-desc{font-size:14px;color:rgba(247,244,239,0.5);line-height:1.9;font-weight:300;}
+
+/* ── 푸터 ── */
+.footer{
+  background:var(--ink);
+  border-top:1px solid rgba(255,255,255,0.06);
+  padding:32px 24px;
+  text-align:center;
+}
+.footer-logo{
+  font-family:'Playfair Display',serif;
+  font-size:16px;color:rgba(247,244,239,0.4);
+  margin-bottom:8px;
+}
+.footer-copy{font-size:11px;color:rgba(247,244,239,0.2);line-height:1.8;}
+
+/* ── 애니메이션 ── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes scrollAnim{
+  0%{transform:scaleY(0);transform-origin:top;}
+  50%{transform:scaleY(1);transform-origin:top;}
+  51%{transform:scaleY(1);transform-origin:bottom;}
+  100%{transform:scaleY(0);transform-origin:bottom;}
+}
+
+/* ── 반응형 ── */
+@media(max-width:600px){
+  .header{padding:0 20px;}
+  .hero-stats{gap:20px;}
+  .cat-grid{grid-template-columns:1fr;gap:12px;}
+  .cat-card.large{grid-column:span 1;min-height:160px;}
+  .cat-card.normal{min-height:150px;}
+  .cat-content{padding:24px 20px;}
+  .section{padding:60px 16px 80px;}
+}
+@media(min-width:768px){
+  .cat-grid{grid-template-columns:repeat(3,1fr);}
+  .cat-card.large{grid-column:span 1;min-height:240px;}
+  .cat-card.normal{min-height:240px;}
+}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="header">
+  <a class="logo" href="#">
+    <div class="logo-mark">🍊</div>
+    <div class="logo-name">LocalBoost <em>Jeju</em></div>
+  </a>
+  <div class="header-badge">로컬부스트 제주</div>
+</header>
+
+<!-- 히어로 -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <!-- 제주 장식 SVG -->
+  <svg class="jeju-deco" viewBox="0 0 480 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M 60,140 Q 55,120 68,105 Q 88,82 120,70 Q 158,56 200,50 Q 248,44 295,46 Q 342,48 382,58 Q 418,68 436,88 Q 452,106 448,128 Q 442,152 420,168 Q 392,186 352,196 Q 306,208 255,212 Q 200,216 152,208 Q 108,200 80,184 Q 58,170 60,152 Z" fill="currentColor" stroke="currentColor" stroke-width="2"/>
+    <path d="M 260,95 L 285,138 L 235,138 Z" fill="currentColor" opacity="0.6"/>
+  </svg>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">Jeju Local Platform</div>
+    <h1 class="hero-title">
+      <span class="line1">제주를 더 깊게</span>
+      <span class="line2">로컬부스트 제주</span>
+    </h1>
+    <p class="hero-desc">
+      제주의 숙소, 맛집, 학원, 부동산까지<br>
+      제주 로컬의 모든 것을 한곳에서 찾아보세요
+    </p>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num">101<span>+</span></div>
+        <div class="stat-label">제주 숙소</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">605<span>+</span></div>
+        <div class="stat-label">제주 맛집</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1,280<span>+</span></div>
+        <div class="stat-label">제주 학원</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>카테고리 보기</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- 카테고리 -->
+<section class="section">
+  <div class="section-header">
+    <div class="section-eyebrow">Categories</div>
+    <h2 class="section-title">원하는 카테고리를<br><em>선택하세요</em></h2>
+  </div>
+
+  <div class="cat-grid">
+
+    <!-- 숙소 -->
+    <a class="cat-card stay large" href="jeju-stay.html">
+      <div class="cat-bg"></div>
+      <div class="cat-pattern"></div>
+      <div class="cat-content">
+        <div>
+          <span class="cat-icon">🏡</span>
+          <div class="cat-label">Accommodation</div>
+          <div class="cat-name">제주 <em>숙소</em></div>
+          <div class="cat-desc">호텔, 펜션, 게스트하우스<br>제주 전역 101곳</div>
+          <div class="cat-count">101개 등록</div>
+        </div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </a>
+
+    <!-- 맛집 -->
+    <a class="cat-card food large" href="jeju-food.html">
+      <div class="cat-bg"></div>
+      <div class="cat-pattern"></div>
+      <div class="cat-content">
+        <div>
+          <span class="cat-icon">🍽</span>
+          <div class="cat-label">Restaurant</div>
+          <div class="cat-name">제주 <em>맛집</em></div>
+          <div class="cat-desc">흑돼지, 해산물, 카페·디저트<br>제주 전역 605곳</div>
+          <div class="cat-count">605개 등록</div>
+        </div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </a>
+
+    <!-- 학원 -->
+    <a class="cat-card academy normal" href="jeju-academy.html">
+      <div class="cat-bg"></div>
+      <div class="cat-pattern"></div>
+      <div class="cat-content">
+        <div>
+          <span class="cat-icon">📚</span>
+          <div class="cat-label">Academy</div>
+          <div class="cat-name">제주 <em>학원</em></div>
+          <div class="cat-desc">영어·수학·예능<br>제주시 1,280곳</div>
+          <div class="cat-count">1,280개 등록</div>
+        </div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </a>
+
+    <!-- 부동산 -->
+    <a class="cat-card realty normal" href="jeju-realty.html">
+      <div class="cat-bg"></div>
+      <div class="cat-pattern"></div>
+      <div class="cat-content">
+        <div>
+          <span class="cat-icon">🏠</span>
+          <div class="cat-label">Real Estate</div>
+          <div class="cat-name">제주 <em>부동산</em></div>
+          <div class="cat-desc">매매·전월세·상가<br>제주 부동산 안내</div>
+          <div class="cat-count">준비 중</div>
+        </div>
+      </div>
+      <div class="cat-arrow">→</div>
+    </a>
+
+    <!-- 병원 (coming soon) -->
+    <a class="cat-card coming normal" href="#">
+      <div class="cat-bg"></div>
+      <div class="cat-pattern"></div>
+      <div class="cat-content">
+        <div>
+          <span class="cat-icon">🏥</span>
+          <div class="cat-label">Medical</div>
+          <div class="cat-name">제주 <em>병원</em></div>
+          <div class="cat-desc">병원·약국·의원</div>
+          <div class="coming-tag">Coming Soon</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- 미용·생활 (coming soon) -->
+    <a class="cat-card coming normal" href="#">
+      <div class="cat-bg"></div>
+      <div class="cat-pattern"></div>
+      <div class="cat-content">
+        <div>
+          <span class="cat-icon">✂️</span>
+          <div class="cat-label">Beauty & Life</div>
+          <div class="cat-name">미용 <em>·생활</em></div>
+          <div class="cat-desc">미용실·네일·스파</div>
+          <div class="coming-tag">Coming Soon</div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<!-- 소개 -->
+<div class="about-section">
+  <div class="about-inner">
+    <div class="about-eyebrow">About LocalBoost Jeju</div>
+    <h3 class="about-title">제주 로컬 비즈니스를<br><em>더 많은 사람에게</em></h3>
+    <p class="about-desc">
+      로컬부스트 제주는 제주도의 로컬 업체들이<br>
+      더 쉽게 발견되고, 더 많이 연결될 수 있도록 돕는 플랫폼입니다.<br>
+      업체 등록 및 광고 문의 · localboost@jeju.kr · 010-3064-7989
+    </p>
+  </div>
+</div>
+
+<!-- 푸터 -->
+<footer class="footer">
+  <div class="footer-logo">LocalBoost Jeju · 로컬부스트 제주</div>
+  <div class="footer-copy">
+    © 2025 도약하는 개구리 · 대표 김현우<br>
+    제주특별자치도 제주시 · 사업자등록 준비 중
+  </div>
+</footer>
+
+<script>
+// 스크롤 시 헤더 그림자
+window.addEventListener('scroll', function(){
+  var h = document.querySelector('.header');
+  h.style.boxShadow = window.scrollY > 20 ? '0 4px 24px rgba(0,0,0,0.08)' : 'none';
+});
+
+// 카드 스크롤 진입 애니메이션
+var observer = new IntersectionObserver(function(entries){
+  entries.forEach(function(e){
+    if(e.isIntersecting) e.target.style.animationPlayState = 'running';
+  });
+}, {threshold: 0.1});
+document.querySelectorAll('.cat-card').forEach(function(el){
+  el.style.animationPlayState = 'paused';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
